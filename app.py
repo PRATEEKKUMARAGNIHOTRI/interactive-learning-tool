@@ -193,7 +193,7 @@ def main():
 
         log_interaction(active_tab, prompt, response)
         # Rerun so that the updated conversation is displayed
-        st.experimental_rerun()
+        st.rerun()
 
 if __name__ == "__main__":
     main()
