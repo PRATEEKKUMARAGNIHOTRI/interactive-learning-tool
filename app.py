@@ -17,7 +17,7 @@ def initialize_session_state():
 
 def log_interaction(question_idx, user_input, assistant_response):
     """
-    Log each interaction to a JSON file with timestamp
+    Log each interaction to a remote server.
     """
     log_entry = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -27,21 +27,14 @@ def log_interaction(question_idx, user_input, assistant_response):
         "assistant_response": assistant_response
     }
     
-    log_file = "interaction_log.jsonl"
+    log_server_url = os.environ["LOGGING_SERVER_URL"] + "/log"
     
-    # # Read existing logs if file exists
-    # try:
-    #     with open(log_file, 'r') as f:
-    #         logs = json.load(f)
-    # except (FileNotFoundError, json.JSONDecodeError):
-    #     logs = []
-    
-    # Append new log entry
-    # logs.append(log_entry)
-    
-    # Write updated logs back to file
-    with open(log_file, 'a') as f:
-        f.write(json.dumps(log_entry)+'\n')
+    try:
+        response = requests.post(log_server_url, json=log_entry)
+        if response.status_code != 200:
+            print("Failed to log interaction:", response.text)
+    except Exception as e:
+        print("Error logging interaction:", str(e))
 
 def get_llm_response(message, question_idx, response_placeholder):
     client = openai.Client(
