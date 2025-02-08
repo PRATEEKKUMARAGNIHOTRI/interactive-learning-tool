@@ -1,6 +1,7 @@
 import streamlit as st 
 import openai
 import os, json
+import requests
 from dotenv import load_dotenv
 from datetime import datetime
 from questions import QUESTIONS
